@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model WebApp.Models.Auction
+<h1>@Model.ProductName</h1>
+<p>Created by: @Model.User.FirstName</p>
+<a href="/logout">Log Out</a><br><br>
+<a href="/index">Home</a><br><br>
+<br>
+
+<p>time remaining:</p>
+<p><i><b>@Model.Description</b></i></p>
+<br>
+<p>Current Highest Bid: @Model.Biders[0].TopBid</p>
+<p>By: @Model.Biders[0].User.FirstName</p>
+
+
+<br>
+<form action="/placeBid" method="post">
+    
+    <input type="hidden" name="AuctionId" value="@Model.AuctionId">
+    <input type="hidden" name="BidId" value="@Model.Biders[0].BidId">
+    <input placeholder="Your Bid goes Here..." name="myBid" type="number" value="1" step="1" size="6"/><br>
+    <input type="submit" value="Bid!!">
+    <span class="err">@ViewBag.Wrong</span>
+
+</form>

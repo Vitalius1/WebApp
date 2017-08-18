@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model List<WebApp.Models.Auction>
+<h1>Current Auctions</h1>
+<p>Hi @ViewBag.LoggedUser.FirstName</p>
+<a href="/logout">Log Out</a><br><br>
+
+
+
+
+
+<table>
+    <thead>
+        <th>Product</th>
+        <th>Seller</th>
+        <th>Top Bid</th>
+        <th>Time Remaining</th>
+        <th>Action</th>
+    </thead>
+    <tbody>
+        @{
+            foreach(var auction in @Model)
+            {
+                string time = null;
+                TimeSpan duration = auction.EndDate - DateTime.Now;
+                if(duration.Minutes > 0)
+                {
+                time = duration.Minutes.ToString() + " Minutes ";
+                }
+                if(duration.Minutes == 1)
+                {
+                time = duration.Minutes.ToString() + " Minute ";
+                }
+                if(duration.Hours > 0)
+                {
+                    if(duration.Hours == 1)
+                    {
+                        time = duration.Hours.ToString() + " Hour " + time;
+                    }
+                    else{
+                        time = duration.Hours.ToString() + " Hours " + time;
+                    }
+                }
+                if(duration.Days > 0)
+                {
+                    if(duration.Days == 1)
+                    {
+                        time = duration.Days.ToString() + " Day " + time;
+                    }
+                    else{
+                        time = duration.Days.ToString() + " Days " + time;
+                    }
+                }
+                foreach(var bid in auction.Biders)
+                {
+                    <tr>
+                        <td><a href="/auctionitem/@auction.AuctionId">@auction.ProductName</a></td>
+                        <td>@auction.User.FirstName</td>
+                        <td>$@String.Format("{0:0.00}", bid.TopBid)</td>
+                        <td>@time</td>
+                        <td>
+                            @if(auction.UserId == ViewBag.LoggedUser.UserId)
+                            {
+                                <a href="/delete/@auction.AuctionId">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+<a href="/auction"><button class="submit-button">New Auction</button></a>
+<p>Your Current Wallet: $@String.Format("{0:0.00}", ViewBag.LoggedUser.Wallet)</p>
